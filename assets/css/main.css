@@ -1,0 +1,269 @@
+:root,
+:host {
+  --color-scrollbar-thumb: oklch(75% .15 35/.3);
+  --color-scrollbar-thumb-hover: oklch(75% .15 35/.5)
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  border-radius: 20px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-scrollbar-thumb-hover);
+}
+
+body {
+  min-height: 100vh;
+  background-color: #FFF9EC;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  background-color: #FF4C1D;
+}
+
+.icons span i {
+  color: #4A5565;
+  margin: 0 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.icons span i:hover {
+  color: #f54900
+}
+
+.avatar-image {
+  border-color: #FFC98E;
+}
+
+/* Make Custom toggler NO JS */
+.navbar-toggler {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 6px 10px;
+}
+
+.toggler-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+}
+
+.toggler-icon i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.toggler-icon .fa-xmark {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.8);
+}
+
+.navbar-toggler[aria-expanded='true'] .fa-bars {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
+}
+
+.navbar-toggler[aria-expanded='true'] .fa-xmark {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+
+/* Main */
+
+.recipe-card {
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid #fed7aa;
+}
+
+.recipe-image-container {
+  height: 400px;
+  position: relative;
+}
+
+@media (min-width: 992px) {
+  .recipe-image-container {
+    height: 750px;
+  }
+}
+
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rating-badge {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: white;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stats-overlay {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.content-scroll {
+  height: 350px;
+  overflow-y: auto;
+}
+
+@media (min-width: 992px) {
+  .content-area {
+    height: 750px;
+    overflow-y: auto;
+  }
+}
+
+.ingredient-number,
+.instruction-number {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #f97316;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.instruction-number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  font-size: 1.25rem;
+}
+
+.nav-tabs {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 0.5rem 0.5rem;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #495057;
+  border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: #f97316;
+  background: transparent;
+  border-color: transparent transparent #f97316;
+}
+
+.badge-pill {
+  border-radius: 50px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.btn-action {
+  width: 3rem;
+  height: 3rem;
+  background: #fed7aa;
+  color: #ea580c;
+  border: none;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.btn-action:hover {
+  background: #fdba74;
+}
+
+.nutrition-card {
+  background: #f8f9fa;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.nutrition-icon-box {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tip-card {
+  background: #fef3c7;
+  border-radius: 0.75rem;
+  border-left: 4px solid #fbbf24;
+  padding: 1rem;
+}
+
+.gradient-bg {
+  background: linear-gradient(to bottom right, #ffedd5, #fef3c7);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.alert {
+  border-radius: 10px;
+  border-left: 5px solid #FB313B;
+}
+
+a {
+  text-decoration: none;
+}
