@@ -928,7 +928,10 @@ function showLongTimeAlert(time) {
 }
 
 function generateRandomRecipe() {
-  var randomIndex = Math.floor(Math.random() * items.length);
+  var randomIndex = typeof window.forcedIndex === 'number' ? window.forcedIndex : Math.floor(Math.random() * items.length);
+  window.forcedIndex = undefined;
+  currentIndex = randomIndex;
+  addToRecent(randomIndex);
 
   let ingredientsHTML = '';
   for (let i = 0; i < items[randomIndex].ingredients.length; i++) {
@@ -1017,7 +1020,7 @@ function generateRandomRecipe() {
               <p class="text-muted">${items[randomIndex].description}</p>
             </div>
             <div class="d-flex gap-2 mx-auto mx-lg-0">
-              <button class="btn-action">
+              <button class="btn-action" onclick="saveCurrentRecipe()">
                 <i class="fas fa-bookmark"></i>
               </button>
               <button class="btn-action">
@@ -1177,4 +1180,117 @@ function generateRandomRecipe() {
   `;
 }
 
-generateRandomRecipe();
+let currentIndex = null;
+let savedIds = [];
+let recentIds = [];
+
+try {
+  savedIds = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+  recentIds = JSON.parse(localStorage.getItem('recentRecipes') || '[]');
+} catch (e) {}
+
+function saveCurrentRecipe() {
+  if (currentIndex === null) return;
+  if (!savedIds.includes(currentIndex)) {
+    savedIds.unshift(currentIndex);
+    localStorage.setItem('savedRecipes', JSON.stringify(savedIds));
+  }
+  renderSavedModal();
+}
+
+function addToRecent(index) {
+  recentIds = [index, ...recentIds.filter(function (i) { return i !== index; })].slice(0, 10);
+  localStorage.setItem('recentRecipes', JSON.stringify(recentIds));
+  renderRecentModal();
+}
+
+function renderSavedModal() {
+  var el = document.getElementById('saved-list');
+  if (!el) return;
+  if (!savedIds.length) {
+    el.innerHTML = '<p class="text-muted m-0">No saved recipes</p>';
+    return;
+  }
+  var html = '<ul class="list-group">' + savedIds.map(function (i) {
+    return '<li class="list-group-item d-flex align-items-center justify-content-between"><span>' + items[i].name + '</span><button class="btn btn-sm btn-outline-primary" onclick="showRecipe(' + i + ')">Open</button></li>';
+  }).join('') + '</ul>';
+  el.innerHTML = html;
+}
+
+function renderRecentModal() {
+  var el = document.getElementById('recent-list');
+  if (!el) return;
+  if (!recentIds.length) {
+    el.innerHTML = '<p class="text-muted m-0">No recent recipes</p>';
+    return;
+  }
+  var html = '<ul class="list-group">' + recentIds.map(function (i) {
+    return '<li class="list-group-item d-flex align-items-center justify-content-between"><span>' + items[i].name + '</span><button class="btn btn-sm btn-outline-primary" onclick="showRecipe(' + i + ')">Open</button></li>';
+  }).join('') + '</ul>';
+  el.innerHTML = html;
+}
+
+function showRecipe(i) {
+  window.forcedIndex = i;
+  generateRandomRecipe();
+}
+
+function renderSearchResults(query) {
+  var q = (query || '').toLowerCase();
+  if (!q) {
+    generateRandomRecipe();
+    return;
+  }
+  var results = [];
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    var text = (it.name + ' ' + it.category + ' ' + it.description).toLowerCase();
+    if (text.indexOf(q) !== -1) results.push(i);
+  }
+  if (!results.length) {
+    document.getElementById('main-section').innerHTML = '<div class="alert alert-warning">No results</div>';
+    return;
+  }
+  var cards = results.map(function (i) {
+    var it = items[i];
+    return '<div class="col-md-4"><div class="card shadow-sm mb-4" style="border-radius:1rem; overflow:hidden"><img src="' + it.imgCover + '" alt="' + it.image + '" class="card-img-top" style="height:200px; object-fit:cover"><div class="card-body d-flex flex-column"><h6 class="fw-bold mb-2">' + it.name + '</h6><div class="d-flex justify-content-between align-items-center"><span class="badge bg-primary">' + it.category + '</span><button class="btn btn-sm btn-danger" onclick="showRecipe(' + i + ')">Open</button></div></div></div></div>';
+  }).join('');
+  document.getElementById('main-section').innerHTML = '<section class="container-fluid"><div class="row">' + cards + '</div></section>';
+}
+
+function setupSearch() {
+  var input = document.getElementById('search-input');
+  if (!input) return;
+  input.addEventListener('input', function (e) {
+    renderSearchResults(e.target.value);
+  });
+}
+
+function applyTheme() {
+  var theme = 'light';
+  try { theme = localStorage.getItem('theme') || 'light'; } catch (e) {}
+  document.documentElement.setAttribute('data-bs-theme', theme);
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.checked = theme === 'dark';
+}
+
+function setupThemeToggle() {
+  var toggle = document.getElementById('theme-toggle');
+  if (!toggle) return;
+  toggle.addEventListener('change', function () {
+    var theme = toggle.checked ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    try { localStorage.setItem('theme', theme); } catch (e) {}
+  });
+}
+
+function initApp() {
+  applyTheme();
+  setupThemeToggle();
+  renderSavedModal();
+  renderRecentModal();
+  setupSearch();
+  generateRandomRecipe();
+}
+
+initApp();
